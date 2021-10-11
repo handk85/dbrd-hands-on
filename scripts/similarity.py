@@ -11,9 +11,6 @@ project_name = sys.argv[1].upper()
 with open("../data/preprocessed-data-%s.json" % project_name) as f:
     content = f.read()
 data = json.loads(content)
-with open("../data/groundtruth-%s.csv" % project_name) as f:
-    content = f.read()
-ground_truth = [v.split() for v in content.split("\n")]
 
 # The number of recommendations parameter (i.e., n-recommendations)
 N = 10
@@ -46,7 +43,6 @@ with open("../data/similarity-%s-%s.csv" % (project_name, N), "w") as f:
             values[another_item["bug_id"]] = s
 
         count = 0
-        print(values)
         for another_id in sorted(values, key=values.get, reverse=True):
             if count >= N:
                 break
