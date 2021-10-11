@@ -1,6 +1,7 @@
 import configparser
 import glob
 import json
+import logging
 import sys
 import re
 
@@ -36,8 +37,11 @@ for f_name in glob.glob("%s/*.xml" % OUTPUT_DIR):
     values = dict()
     for key, regexp in regexps.items():
         temp_value = regexp.findall(content)
-        if temp_value:
-            values[key] = temp_value[0]
+        values[key] = temp_value[0] if temp_value else ""
+    if values["bug_id"] == "":
+        logging.info("%s is not a valid bug report" % f_name)
+        continue
+    values["bug_id"] = int(values["bug_id"])
 
     # Skip unresolved bug reports
     if "resolution" not in values or values["resolution"] == "" or \
@@ -50,5 +54,5 @@ for f_name in glob.glob("%s/*.xml" % OUTPUT_DIR):
 
     data.append(values)
 
-with open("../data/preprocessed-data.json", "w") as f:
+with open("../data/preprocessed-data-%s.json" % project_name, "w") as f:
     f.write(json.dumps(data))
