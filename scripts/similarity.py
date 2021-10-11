@@ -16,7 +16,7 @@ with open("../data/groundtruth-%s.csv" % project_name) as f:
 ground_truth = [v.split() for v in content.split("\n")]
 
 # The number of recommendations parameter (i.e., n-recommendations)
-N = 5
+N = 10
 # Use default k value
 cosine = Cosine(3)
 
@@ -32,31 +32,26 @@ def similarity(title1: str, desc1: str, title2: str, desc2: str):
     return cosine.similarity(s1, s2)
 
 
-# key is target bug id
-# value is a list of a pair of bug_id and similarity
-results = dict()
-
-for target_item in data:
-
-    values = dict()
-    for another_item in data:
-        # Should not use future data and the same data
-        if another_item["bug_id"] >= target_item["bug_id"]:
-            continue
-
-        s = similarity(target_item["title"], target_item["description"],
-                       another_item["title"], another_item["description"])
-        values[another_item["bug_id"]] = s
-
-    results[target_item["bug_id"]] = values
-
-
 with open("../data/similarity-%s-%s.csv" % (project_name, N), "w") as f:
     f.write("BugId,Recommendation,Similarity\n")
-    for target_id, similarities in results.items():
+    for target_item in data:
+        values = dict()
+        for another_item in data:
+            # Should not use future data and the same data
+            if another_item["bug_id"] >= target_item["bug_id"]:
+                continue
+
+            s = similarity(target_item["title"], target_item["description"],
+                           another_item["title"], another_item["description"])
+            values[another_item["bug_id"]] = s
+
         count = 0
-        for another_id, s in {k: v for k, v in sorted(similarities.items(), key=lambda item: item[1])}:
+        print(values)
+        for another_id in sorted(values, key=values.get, reverse=True):
             if count >= N:
                 break
-            f.write("%s,%s,%s\n" % (target_id, another_id, s))
+            f.write("%s,%s,%s\n" % (target_item["bug_id"], another_id, values[another_id]))
             count += 1
+
+
+
