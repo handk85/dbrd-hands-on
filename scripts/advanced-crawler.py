@@ -51,6 +51,7 @@ for i in range(START_INDEX, END_INDEX, -1):
         rand_time = random.randint(3, 7)
         logging.info("Sleep for %s seconds" % rand_time)
         time.sleep(rand_time)
+
     url = BASE_URL % i
     try:
         logging.info(url)
