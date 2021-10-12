@@ -60,4 +60,5 @@ if __name__ == "__main__":
     with open("../data/similarity-%s-%s.csv" % (project_name, N), "w") as f:
         f.write("BugId,Recommendation,Similarity\n")
         for item in results:
-            f.write("%s,%s,%s\n" % (item["bug_id"], item["values"][0], item["values"][1]))
+            for values in item["values"]:
+                f.write("%s,%s,%s\n" % (item["bug_id"], values[0], values[1]))
