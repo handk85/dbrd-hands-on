@@ -18,8 +18,6 @@ data = json.loads(content)
 N = 10
 # The number of process
 NUM_PROCESS = 8
-# Use default k value
-cosine = Cosine(3)
 
 
 def concat_title_and_desc(title: str, desc: str):
@@ -27,6 +25,8 @@ def concat_title_and_desc(title: str, desc: str):
 
 
 def similarity(title1: str, desc1: str, title2: str, desc2: str):
+    # Use default k value
+    cosine = Cosine(3)
     s1 = concat_title_and_desc(title1, desc1)
     s2 = concat_title_and_desc(title2, desc2)
 
