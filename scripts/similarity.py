@@ -1,14 +1,17 @@
 from strsimpy.cosine import Cosine
 from multiprocessing import Pool
+from common_logger import init_logger
 import os
 import sys
 import json
+import logging
 
 
 if len(sys.argv) < 2:
     print("Usage: python crawl.py [PROJECT_NAME]")
     sys.exit(0)
 project_name = sys.argv[1].upper()
+init_logger("similarity-%s.log" % project_name)
 
 # Load data from the previous steps
 with open("../data/preprocessed-data-%s.json" % project_name) as f:
@@ -35,7 +38,7 @@ def similarity(title1: str, desc1: str, title2: str, desc2: str):
 
 
 def map_func(target_item: dict):
-    print("PID: %s, BugID: %s" % (os.getpid(), target_item["bug_id"]))
+    logging.info("PID: %s, BugID: %s" % (os.getpid(), target_item["bug_id"]))
     values = dict()
     for another_item in data:
         # Should not use future data and the same data

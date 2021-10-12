@@ -6,22 +6,14 @@ import socket
 import time
 import sys
 from urllib.request import *
+from common_logger import init_logger
 
-# Init logger for both file and stdout
-def init_logger():
-    log_format = "%(asctime)s [%(levelname)-5.5s]  %(message)s"
-    logging.basicConfig(filename="execution.log", level=logging.DEBUG, format=log_format)
-    formatter = logging.Formatter(log_format)
-    stream_handler = logging.StreamHandler(sys.stdout)
-    stream_handler.setFormatter(formatter)
-    logging.getLogger().addHandler(stream_handler)
-
-init_logger()
 
 if len(sys.argv) < 2:
     print("Usage: python crawl.py [PROJECT_NAME]")
     sys.exit(0)
 project_name = sys.argv[1].upper()
+init_logger("crawler-%s.log" % project_name)
 
 socket.setdefaulttimeout(50)
 config = configparser.ConfigParser()

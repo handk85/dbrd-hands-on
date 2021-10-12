@@ -2,22 +2,9 @@ import os
 import json
 import requests
 import logging
+from common_logger import init_logger
 
-# Import and init common logger
-import sys
-
-
-# Init logger for both file and stdout
-def init_logger():
-    log_format = "%(asctime)s [%(levelname)-5.5s]  %(message)s"
-    logging.basicConfig(filename="execution.log", level=logging.DEBUG, format=log_format)
-    formatter = logging.Formatter(log_format)
-    stream_handler = logging.StreamHandler(sys.stdout)
-    stream_handler.setFormatter(formatter)
-    logging.getLogger().addHandler(stream_handler)
-
-init_logger()
-
+init_logger("graphql-crawl.log")
 
 # Please issue your own personal access token
 # https://github.com/settings/tokens
