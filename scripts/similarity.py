@@ -1,5 +1,6 @@
 from strsimpy.cosine import Cosine
 from multiprocessing import Pool
+import os
 import sys
 import json
 
@@ -34,7 +35,8 @@ def similarity(title1: str, desc1: str, title2: str, desc2: str):
 
 
 def map_func(target_item: dict):
-    values = {"bug_id": target_item["bug_id"]}
+    print("PID: %s, BugID: %s" % (os.getpid(), target_item["bug_id"]))
+    values = dict()
     for another_item in data:
         # Should not use future data and the same data
         if another_item["bug_id"] >= target_item["bug_id"]:
@@ -42,16 +44,10 @@ def map_func(target_item: dict):
 
         s = similarity(target_item["title"], target_item["description"],
                        another_item["title"], another_item["description"])
-        values["recommendation"] = another_item["bug_id"]
-        values["similarity"] = s
+        values[another_item["bug_id"]] = s
 
-    count = 0
-    for another_id in sorted(values, key=values.get, reverse=True):
-        if count >= N:
-            break
-        f.write("%s,%s,%s\n" % (target_item["bug_id"], another_id, values[another_id]))
-        count += 1
-    return values
+    return {"bug_id": target_item["bug_id"], "values": [[k, values[k]] for k in
+                                                        sorted(values, key=values.get, reverse=True)[:N]]}
 
 
 if __name__ == "__main__":
@@ -61,8 +57,4 @@ if __name__ == "__main__":
     with open("../data/similarity-%s-%s.csv" % (project_name, N), "w") as f:
         f.write("BugId,Recommendation,Similarity\n")
         for item in results:
-            f.write("%s,%s,%s\n" % (item["bug_id"], item["recommendation"], item["similarity"]))
-
-
-
-
+            f.write("%s,%s,%s\n" % (item["bug_id"], item["values"][0], item["values"][1]))
