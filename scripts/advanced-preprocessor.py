@@ -6,10 +6,15 @@ import sys
 import re
 
 regexps = {"bug_id": re.compile("<bug_id>(.*?)</bug_id>"),
-        "title": re.compile("<short_desc>(.*?)</short_desc>"),
-        "status": re.compile("<bug_status>(.*?)</bug_status>"),
-        "resolution": re.compile("<resolution>(.*?)</resolution>"),
-        "description": re.compile("<thetext>(.*?)</thetext>", re.MULTILINE | re.DOTALL)}
+           "title": re.compile("<short_desc>(.*?)</short_desc>"),
+           "status": re.compile("<bug_status>(.*?)</bug_status>"),
+           "resolution": re.compile("<resolution>(.*?)</resolution>"),
+           "product": re.compile("<product>(.*?)</product>"),
+           "component": re.compile("<component>(.*?)</component>"),
+           "version": re.compile("<version>(.*?)</version>"),
+           "priority": re.compile("<priority>(.*?)</priority>"),
+           "type": re.compile("<bug_type>(.*?)</bug_type>"),
+           "description": re.compile("<thetext>(.*?)</thetext>", re.MULTILINE | re.DOTALL)}
 # dup_id is not a mandatory field in a bug report
 rg_dup_id = re.compile("<dup_id>(.*?)</dup_id>")
 
