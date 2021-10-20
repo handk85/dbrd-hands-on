@@ -1,8 +1,8 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score
 
 # The names of properties defined in pre-processed data
 FEATURE_FIELDS = ["title", "product", "component", "version", "priority", "type", "description"]
@@ -25,11 +25,20 @@ y = resolution.apply(lambda x: x == "DUPLICATE").values.ravel()
 # Split dataset into train and test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
-classifier = RandomForestClassifier(n_estimators=20, random_state=0)
-classifier.fit(X_train, y_train)
-y_pred = classifier.predict(X_test)
+# standardize both train and test data set to optimize the model
+scaler = StandardScaler()
+# fit only on training data
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Use multi-layer perceptron with default setting
+mlp = MLPClassifier()
+mlp.fit(X_train, y_train)
+y_pred = mlp.predict(X_test)
 
 # Print the results
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 print(accuracy_score(y_test, y_pred))
+print(roc_auc_score(y_test, y_pred))
