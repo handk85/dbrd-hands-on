@@ -18,6 +18,12 @@ dataset = dataset.sample(frac=0.1)
 
 # Concatenate title and description
 texts = dataset["title"] + "\n\n" + dataset["description"]
+# Even though we use the concatenated string directly, you can adopt pre-processing techniques (e.g., stopword removal)
+# import nltk
+# from nltk.corpus import stopwords
+# nltk.download('stopwords')
+# texts=texts.apply(lambda x: " ".join([word for word in x.split() if word not in (stopwords.words('english'))]))
+
 # Use bag of words to convert texts into vectors
 cv = CountVectorizer()
 X = cv.fit_transform(texts).toarray()
