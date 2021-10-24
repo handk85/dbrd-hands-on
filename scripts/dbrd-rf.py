@@ -12,6 +12,8 @@ LABEL_FIELD = ["resolution"]
 dataset = pd.read_json("../data/preprocessed-data-MOZILLA.json")
 # Dataset MUST BE SORTED! You cannot train a model with future data in real practice.
 dataset = dataset.sort_values("bug_id")
+# Sample the dataset. We will use only 50% of the dataset.
+dataset = dataset.sample(frac=0.5)
 
 # Since classification algorithm cannot take string values, transform the string values into numeric values
 le = LabelEncoder()
@@ -39,5 +41,5 @@ y_pred = rf.predict(X_test)
 # Print the results
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
-print(accuracy_score(y_test, y_pred))
-print(roc_auc_score(y_test, y_pred))
+print("Accuracy: %s" % accuracy_score(y_test, y_pred))
+print("AUC-ROC: %s" % roc_auc_score(y_test, y_pred))
