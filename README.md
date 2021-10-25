@@ -7,11 +7,11 @@ During the hands-on session, we formulate duplicate bug report detection (DBRD) 
  * Be able to classify duplicate bug reports
 
 ## Prerequisite
- * Installation of a package manager, conda[^1] (https://docs.conda.io/en/latest/). Then, install the below Python libraries via conda:
+ * Installation of a package manager, `conda` (https://docs.conda.io/en/latest/). Then, install the below Python libraries via `conda`:
    * pandas: https://pandas.pydata.org/
    * scikit-learn: https://scikit-learn.org/stable/
 
-[^1]: If you use M1 Mac (ARM architecture) and cannot install the conda properly, please check this article: https://blog.donggyun.com/article/4
+If you use M1 Mac (ARM architecture) and cannot install the conda properly, please check this article: https://blog.donggyun.com/article/4
 
 ## A Dataset for DBRD
 
@@ -32,15 +32,15 @@ The dataset covers the bug reports submitted to Mozilla Bugzilla. The crawled da
 }
 ```
 
-## DBRD
+## Categorical Information Based DBRD 
 ### 1.	Clone the tutorial repo
  
 ```
 > git clone git@github.com:handk85/dbrd-hands-on.git
-> cd msr-tutorial
+> cd dbrd-hands-on 
 ```
 
-### 2.	Categorical Information based DBRD
+### 2. Classification script	
 Implementation (scripts/dbrd-rf.py)
 
 ```python
@@ -115,5 +115,114 @@ Please use the entire dataset for the classification and check the performance d
 
 ### Task 2
 Please replace the random forest classifier with another classifier. You can find classifiers implemented in scikit-learn API document (https://scikit-learn.org/stable/modules/classes.html).
+
+
+## Natural Language Based DBRD
+### 1. Classification script
+Implementation (scripts/dbrd-mlp.py)
+
+```python
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score
+
+# The names of properties defined in pre-processed data
+NL_FEATURES = ["title", "description"]
+LABEL_FIELD = ["resolution"]
+
+# Load data
+dataset = pd.read_json("../data/preprocessed-data-MOZILLA.json")
+# Dataset MUST BE SORTED! You cannot train a model with future data in real practice.
+dataset = dataset.sort_values("bug_id")
+# Since it takes too long time, sample 10% of dataset for the tutorial
+dataset = dataset.sample(frac=0.1)
+
+# Concatenate title and description
+texts = dataset["title"] + "\n\n" + dataset["description"]
+# Even though we use the concatenated string directly, you can adopt pre-processing techniques (e.g., stopword removal)
+
+# Use bag of words to convert texts into vectors
+cv = CountVectorizer()
+X = cv.fit_transform(texts).toarray()
+
+resolution = dataset[LABEL_FIELD]
+# This lambda converts resolution into either True (i.e., duplicate) or False (i.e., non-duplicate)
+y = resolution.apply(lambda x: x == "DUPLICATE").values.ravel()
+
+# Split dataset into train and test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# standardize both train and test data set to optimize the model
+scaler = StandardScaler()
+# fit only on training data
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+
+mlp = MLPClassifier()
+mlp.fit(X_train, y_train)
+y_pred = mlp.predict(X_test)
+
+# Print the results
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+print("Accuracy: %s" % accuracy_score(y_test, y_pred))
+print("AUC-ROC: %s" % roc_auc_score(y_test, y_pred))
+```
+
+Output
+```
+[[238  19]
+ [ 33  12]]
+              precision    recall  f1-score   support
+
+       False       0.88      0.93      0.90       257
+        True       0.39      0.27      0.32        45
+
+    accuracy                           0.83       302
+   macro avg       0.63      0.60      0.61       302
+weighted avg       0.81      0.83      0.81       302
+
+Accuracy: 0.8278145695364238
+AUC-ROC: 0.5963683527885862
+```
+
+## Tasks
+### Task 1
+The above implementation does not leverage natural language pre-processing techniques (e.g., stopwords removal). Please install `nltk` via `conda`.
+```
+conda install nltk
+```
+
+Then, download stopwords via a Python shell
+```
+>>> import nltk
+>>> nltk.download('stopwords')
+[nltk_data] Downloading package stopwords to /Users/handk/nltk_data...
+[nltk_data]   Unzipping corpora/stopwords.zip.
+True
+```
+
+You can simply remove the common stopwords in the dataset as below:
+```
+from nltk.corpus import stopwords
+...
+
+texts=texts.apply(lambda x: " ".join([word for word in x.split() if word not in (stopwords.words('english'))]))
+```
+
+### Task 2
+Please adopt the natural language pre-processing techniques other than stopword removal.
+
+
+### Task 3
+We only used 10% of the entire dataset due to the time limits. Please try the entire dataset to train the model.
+
+
+
+
 
 
