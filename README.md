@@ -8,11 +8,12 @@ During the hands-on session, we formulate duplicate bug report detection (DBRD) 
 
 ## Prerequisite
  * Installation of a package manager, conda[^1] (https://docs.conda.io/en/latest/). Then, install the below Python libraries via conda:
-  * pandas: https://pandas.pydata.org/
-  * scikit-learn: https://scikit-learn.org/stable/
+   * pandas: https://pandas.pydata.org/
+   * scikit-learn: https://scikit-learn.org/stable/
+
+[^1]: If you use M1 Mac (ARM architecture) and cannot install the conda properly, please check this article: https://blog.donggyun.com/article/4
 
 ## A Dataset for DBRD
-Please download the pre-processed Mozilla bug reports via this link: https://github.com/handk85/dbrd-hands-on/blob/master/data/preprocessed-data-MOZILLA.json 
 
 The dataset covers the bug reports submitted to Mozilla Bugzilla. The crawled date range is from 1 Jan 2021 to 30 May 2021. It contains 15,076 pre-processed bug reports in JSON format. A bug report in the dataset looks as below:
 
@@ -35,7 +36,7 @@ The dataset covers the bug reports submitted to Mozilla Bugzilla. The crawled da
 ### 1.	Clone the tutorial repo
  
 ```
->  git clone git@github.com:handk85/msr-tutorial.git
+> git clone git@github.com:handk85/dbrd-hands-on.git
 > cd msr-tutorial
 ```
 
@@ -116,4 +117,3 @@ Please use the entire dataset for the classification and check the performance d
 Please replace the random forest classifier with another classifier. You can find classifiers implemented in scikit-learn API document (https://scikit-learn.org/stable/modules/classes.html).
 
 
-[^1]: If you use M1 Mac (ARM architecture) and cannot install the conda properly, please check this article: https://blog.donggyun.com/article/4
