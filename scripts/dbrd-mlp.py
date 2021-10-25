@@ -19,10 +19,6 @@ dataset = dataset.sample(frac=0.1)
 # Concatenate title and description
 texts = dataset["title"] + "\n\n" + dataset["description"]
 # Even though we use the concatenated string directly, you can adopt pre-processing techniques (e.g., stopword removal)
-# import nltk
-# from nltk.corpus import stopwords
-# nltk.download('stopwords')
-# texts=texts.apply(lambda x: " ".join([word for word in x.split() if word not in (stopwords.words('english'))]))
 
 # Use bag of words to convert texts into vectors
 cv = CountVectorizer()
@@ -49,5 +45,5 @@ y_pred = mlp.predict(X_test)
 # Print the results
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
-print(accuracy_score(y_test, y_pred))
-print(roc_auc_score(y_test, y_pred))
+print("Accuracy: %s" % accuracy_score(y_test, y_pred))
+print("AUC-ROC: %s" % roc_auc_score(y_test, y_pred))
