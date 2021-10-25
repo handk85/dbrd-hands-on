@@ -11,10 +11,15 @@ LABEL_FIELD = ["resolution"]
 
 # Load data
 dataset = pd.read_json("../data/preprocessed-data-MOZILLA.json")
+# This lambda converts resolution into either True (i.e., duplicate) or False (i.e., non-duplicate)
+dataset[LABEL_FIELD] = dataset[LABEL_FIELD].apply(lambda x: x == "DUPLICATE")
 # Dataset MUST BE SORTED! You cannot train a model with future data in real practice.
 dataset = dataset.sort_values("bug_id")
-# Since it takes too long time, sample 10% of dataset for the tutorial
-dataset = dataset.sample(frac=0.1)
+
+# Select 250 bug reports for each label
+duplicates = dataset[dataset.resolution].sample(n=250)
+non_duplicates = dataset[~dataset.resolution].sample(n=250)
+dataset = pd.concat([duplicates, non_duplicates])
 
 # Concatenate title and description
 texts = dataset["title"] + "\n\n" + dataset["description"]
@@ -24,9 +29,7 @@ texts = dataset["title"] + "\n\n" + dataset["description"]
 cv = CountVectorizer()
 X = cv.fit_transform(texts).toarray()
 
-resolution = dataset[LABEL_FIELD]
-# This lambda converts resolution into either True (i.e., duplicate) or False (i.e., non-duplicate)
-y = resolution.apply(lambda x: x == "DUPLICATE").values.ravel()
+y = dataset[LABEL_FIELD].values.ravel()
 
 # Split dataset into train and test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)

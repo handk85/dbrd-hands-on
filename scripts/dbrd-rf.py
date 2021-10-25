@@ -10,9 +10,11 @@ LABEL_FIELD = ["resolution"]
 
 # Load data
 dataset = pd.read_json("../data/preprocessed-data-MOZILLA.json")
+# This lambda converts resolution into either True (i.e., duplicate) or False (i.e., non-duplicate)
+dataset[LABEL_FIELD] = dataset[LABEL_FIELD].apply(lambda x: x == "DUPLICATE")
 # Dataset MUST BE SORTED! You cannot train a model with future data in real practice.
 dataset = dataset.sort_values("bug_id")
-# Sample the dataset. We will use only 50% of the dataset.
+# Sample the dataset. We will use only 50% of the randomly selected dataset.
 dataset = dataset.sample(frac=0.5)
 
 # Since classification algorithm cannot take string values, transform the string values into numeric values
@@ -20,9 +22,7 @@ le = LabelEncoder()
 features = dataset[CATEGORICAL_FEATURES]
 X = features.apply(le.fit_transform)
 
-resolution = dataset[LABEL_FIELD]
-# This lambda converts resolution into either True (i.e., duplicate) or False (i.e., non-duplicate)
-y = resolution.apply(lambda x: x == "DUPLICATE").values.ravel()
+y = dataset[LABEL_FIELD].values.ravel()
 
 # Split dataset into train and test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
