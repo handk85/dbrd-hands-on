@@ -25,20 +25,21 @@ dataset = pd.concat([duplicates, non_duplicates])
 texts = dataset["title"] + "\n\n" + dataset["description"]
 # Even though we use the concatenated string directly, you can adopt pre-processing techniques (e.g., stopword removal)
 
-# Use bag of words to convert texts into vectors
-cv = CountVectorizer()
-X = cv.fit_transform(texts).toarray()
-
+X = texts.values.ravel()
 y = dataset[LABEL_FIELD].values.ravel()
 
 # Split dataset into train and test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
+# Use bag of words to convert texts into vectors
+cv = CountVectorizer()
+X_train = cv.fit_transform(X_train)
+X_test = cv.transform(X_test)
+
 # standardize both train and test data set to optimize the model
-scaler = StandardScaler()
+scaler = StandardScaler(with_mean=False)
 # fit only on training data
-scaler.fit(X_train)
-X_train = scaler.transform(X_train)
+X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
 mlp = MLPClassifier()
