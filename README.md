@@ -223,7 +223,7 @@ Please adopt the natural language pre-processing techniques other than stopword 
 
 
 ### Task 3
-We only used 10% of the entire dataset due to the time limits. Please try the entire dataset to train the model.
+We only used small amount of the entire dataset due to the time limits. Please try the entire dataset to train the model.
 
 
 
