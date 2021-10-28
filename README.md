@@ -214,7 +214,7 @@ conda install nltk
 
 You can modify `scripts/dbrd-mlp.py`  to remove the common stopwords in the dataset as below:
 
-```
+```python
 ... 
 from nltk.corpus import stopwords
 
@@ -231,7 +231,7 @@ texts=texts.apply(lambda x: " ".join([word for word in x.split() if word not in 
 Please adopt stemming in `scripts/dbrd-mlp.py` by using Porter stemmer.
 The expected change is as below:
 
-```
+```python
 ...
 from nltk.stem.porter import PorterStemmer
 ...
