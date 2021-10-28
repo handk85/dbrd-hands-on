@@ -241,14 +241,6 @@ stemmer = PorterStemmer()
 texts=texts.apply(lambda x: " ".join([stemmer.stem(word) for word in x.split()]))
 ```
 
-
 ### Task 3
-The current example uses classification which is not realistic[^2].
-Please check [this paper](http://www.mysmu.edu.sg/faculty/davidlo/papers/ase11-duplicate.pdf) and evaluate the model in a realistic setting.
-
-[^2]: C. Sun, D. Lo, S. Khoo and J. Jiang, "[Towards more accurate retrieval of duplicate bug reports](http://www.mysmu.edu.sg/faculty/davidlo/papers/ase11-duplicate.pdf)," 2011 26th IEEE/ACM International Conference on Automated Software Engineering (ASE 2011), 2011, pp. 253-262, doi: 10.1109/ASE.2011.6100061.
-
-
-### Task 4
 We only used small amount of the entire dataset due to the time limits. Please try the entire dataset to train the model.
 
