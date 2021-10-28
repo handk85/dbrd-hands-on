@@ -1,8 +1,7 @@
 # Duplicate Bug Report Detection
 
-During the hands-on session, we formulate duplicate bug report detection (DBRD) as a binary classification task[^1] (i.e., classify a bug report as whether duplicate or not).
-
-[^1]: Chengnian Sun, David Lo, Xiaoyin Wang, Jing Jiang, and Siau-Cheng Khoo. 2010. [A discriminative model approach for accurate duplicate bug report retrieval](https://dl.acm.org/doi/pdf/10.1145/1806799.1806811). In Proceedings of the 32nd ACM/IEEE International Conference on Software Engineering - Volume 1 (ICSE '10). Association for Computing Machinery, New York, NY, USA, 45–54. DOI:https://doi.org/10.1145/1806799.1806811
+During the hands-on session, we investigate the first step of duplicate bug report detection (DBRD).
+We will implement a model that can predict whether a bug report is going to be a duplicate or not (i.e., binary classification).
 
 ## Learning Objective
  * Understand how duplicate bug report detection work
@@ -249,4 +248,13 @@ texts=texts.apply(lambda x: " ".join([stemmer.stem(word) for word in x.split()])
 
 ### Task 3
 We only used small amount of the entire dataset due to the time limits. Please try the entire dataset to train the model.
+Please note that it takes long time to train the model.
+
+
+### Task 4 
+In this hands-on, we only discuss about using features from a single bug report, no pairwise comparison.
+Thus, our model can only predict whether a bug report will have a label of duplicate or not.
+Please come up with a solution to recommend ranked list of potential duplicates.
+
+
 
