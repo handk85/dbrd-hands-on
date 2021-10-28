@@ -113,10 +113,19 @@ AUC-ROC: 0.69885273425008
 
 ## Tasks
 ### Task 1
-Please use the entire dataset for the classification and check the performance difference. Also, please try changing the train and test set ratio. 
+Please use 100% dataset for the classification and check the performance difference.
 
 ### Task 2
-Please replace the random forest classifier with another classifier. You can find classifiers implemented in scikit-learn API document (https://scikit-learn.org/stable/modules/classes.html).
+Please use 10% of dataset as test dataset. Also, please use 30% of dataset as test dataset.
+
+### Task 3
+Please replace the random forest classifier with decision tree classifier.
+You can import decision tree classifier as below:
+```
+from sklear.tree import DecisionTreeClassifier
+```
+
+You can also try other classifiers in scikit-learn (https://scikit-learn.org/stable/modules/classes.html).
 
 
 ## Natural Language Based DBRD
@@ -203,35 +212,43 @@ The above implementation does not leverage natural language pre-processing techn
 conda install nltk
 ```
 
-Then, download stopwords via a Python shell
-```
->>> import nltk
->>> nltk.download('stopwords')
-[nltk_data] Downloading package stopwords to /Users/handk/nltk_data...
-[nltk_data]   Unzipping corpora/stopwords.zip.
-True
-```
+You can modify `scripts/dbrd-mlp.py`  to remove the common stopwords in the dataset as below:
 
-You can simply remove the common stopwords in the dataset as below:
 ```
+... 
 from nltk.corpus import stopwords
+
+# The below lines only need to be called once on your machine.
+import nltk
+nltk.download('stopwords')
 ...
 
+# Locate the below line in a proper position in the source code
 texts=texts.apply(lambda x: " ".join([word for word in x.split() if word not in (stopwords.words('english'))]))
 ```
 
 ### Task 2
-Please adopt the natural language pre-processing techniques other than stopword removal.
+Please adopt stemming in `scripts/dbrd-mlp.py` by using Porter stemmer.
+The expected change is as below:
+
+```
+...
+from nltk.stem.porter import PorterStemmer
+...
+
+# Locate the below lines in a proper position in the source code
+stemmer = PorterStemmer()
+texts=texts.apply(lambda x: " ".join([stemmer.stem(word) for word in x.split()]))
+```
 
 
 ### Task 3
-We only used small amount of the entire dataset due to the time limits. Please try the entire dataset to train the model.
-
-
-### Task 4
-The current example uses classification for DBRD task which is not realistic[^2].
+The current example uses classification which is not realistic[^2].
 Please check [this paper](http://www.mysmu.edu.sg/faculty/davidlo/papers/ase11-duplicate.pdf) and evaluate the model in a realistic setting.
 
 [^2]: C. Sun, D. Lo, S. Khoo and J. Jiang, "[Towards more accurate retrieval of duplicate bug reports](http://www.mysmu.edu.sg/faculty/davidlo/papers/ase11-duplicate.pdf)," 2011 26th IEEE/ACM International Conference on Automated Software Engineering (ASE 2011), 2011, pp. 253-262, doi: 10.1109/ASE.2011.6100061.
 
+
+### Task 4
+We only used small amount of the entire dataset due to the time limits. Please try the entire dataset to train the model.
 
