@@ -34,9 +34,9 @@ scaler.fit(X_train)
 X_train = scaler.transform(X_train)
 X_test = scaler.transform(X_test)
 
-rf = RandomForestClassifier()
-rf.fit(X_train, y_train)
-y_pred = rf.predict(X_test)
+classifier = RandomForestClassifier()
+classifier.fit(X_train, y_train)
+y_pred = classifier.predict(X_test)
 
 # Print the results
 print(confusion_matrix(y_test, y_pred))
