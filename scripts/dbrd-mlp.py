@@ -27,7 +27,7 @@ dataset = pd.concat([duplicates, non_duplicates])
 le = LabelEncoder()
 categorical_features = dataset[CATEGORICAL_FEATURES].apply(le.fit_transform)
 
-# You can adopt pre-processing techniques here
+# You can adopt text preprocessing techniques here
 texts = dataset["title"] + "\n\n" + dataset["description"]
 
 # Prepare features and labels
