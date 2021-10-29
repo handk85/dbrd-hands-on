@@ -121,7 +121,7 @@ Please use 10% of dataset as test dataset. Also, please use 30% of dataset as te
 Please replace the random forest classifier with decision tree classifier.
 You can import decision tree classifier as below:
 ```
-from sklear.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier
 ```
 
 You can also try other classifiers in scikit-learn (https://scikit-learn.org/stable/modules/classes.html).
