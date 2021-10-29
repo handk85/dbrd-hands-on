@@ -223,7 +223,8 @@ You can modify `scripts/dbrd-mlp.py`  to remove the common stopwords in the data
 ... 
 from nltk.corpus import stopwords
 
-# The below lines only need to be called once on your machine.
+# The below two lines only need to be called once on your machine.
+# Once you download the stopwords, you don't need to download the stopwords again.
 import nltk
 nltk.download('stopwords')
 ...
